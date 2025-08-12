@@ -30,7 +30,7 @@ public class JwtTokenProvider {
     private final Key key;
     private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtTokenProvider(@Value("${spring.jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
         this.userDetailsService = userDetailsService;
     }
