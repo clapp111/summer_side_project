@@ -1,7 +1,7 @@
 services:
   heeyoung-server:
     container_name: dongmin-server
-    image: ${DOCKERHUB_USERNAME}/dongmin-server:latest
+    image: ${DOCKER_HUB_USERNAME}/dongmin-server:latest
     ports:
       - "8002:8080"
     environment:
