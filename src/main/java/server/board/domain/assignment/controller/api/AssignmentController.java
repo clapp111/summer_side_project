@@ -51,7 +51,7 @@ public class AssignmentController implements AssignmentControllerSpecification {
 
     // 과제 삭제(/api/assignments/{assignmentId})
     @DeleteMapping("/{assignmentId}")
-    public ResponseEntity<?> deleteAssignment(@PathVariable Long assignmentId,
+    public ResponseEntity<Void> deleteAssignment(@PathVariable Long assignmentId,
                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         assignmentService.delete(assignmentId, userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -66,7 +66,7 @@ public class AssignmentController implements AssignmentControllerSpecification {
 
     // 과제 추천 삭제(/api/assignments/{assignmentId}/recommendation)
     @DeleteMapping("/{assignmentId}/recommendation")
-    public ResponseEntity<?> deleteRecommendation(@PathVariable Long assignmentId,
+    public ResponseEntity<Void> deleteRecommendation(@PathVariable Long assignmentId,
                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         recommendationService.deleteRecommendation(assignmentId, userDetails);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
