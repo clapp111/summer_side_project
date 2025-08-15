@@ -24,13 +24,13 @@ public class HomeController implements HomeControllerSpecification {
     private final HomeService homeService;
 
     // 로그인(/api/sign-in)
-    @PostMapping("/sign-in")
+    @PostMapping("/auth/sign-in")
     public ResponseEntity<JwtToken> signIn(@Valid @RequestBody LoginRequestDto loginRequestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(homeService.signIn(loginRequestDto));
     }
 
     // 회원가입(/api/sign-up)
-    @PostMapping("/sign-up")
+    @PostMapping("/auth/sign-up")
     public ResponseEntity<UserResponseDto>  signUp(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(homeService.signUp(userCreateRequestDto));
     }
