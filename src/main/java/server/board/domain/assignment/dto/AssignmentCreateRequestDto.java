@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @Schema(description = "과제 생성 요청 DTO")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AssignmentCreateRequestDto {

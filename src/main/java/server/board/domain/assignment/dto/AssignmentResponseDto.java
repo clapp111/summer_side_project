@@ -7,9 +7,7 @@ import server.board.domain.assignment.entity.Assignment;
 import java.time.format.DateTimeFormatter;
 
 @Getter
-@ToString
 @Schema(description = "과제 정보 응답 DTO")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AssignmentResponseDto {
 
     @Schema(description = "유저 ID", example = "1")

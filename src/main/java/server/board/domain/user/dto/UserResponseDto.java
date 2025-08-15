@@ -5,9 +5,7 @@ import lombok.*;
 import server.board.domain.user.entity.User;
 
 @Getter
-@ToString
 @Schema(description = "유저 정보 응답 DTO")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserResponseDto {
 
     @Schema(description = "유저 ID", example = "1")

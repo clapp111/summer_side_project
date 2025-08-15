@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@ToString
 @Schema(description = "유저 생성 요청 DTO")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserCreateRequestDto {

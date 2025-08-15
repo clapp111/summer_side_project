@@ -24,7 +24,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -47,7 +46,10 @@ public class SecurityConfig {
 
                 .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class)
 
-                .csrf(AbstractHttpConfigurer::disable);
+                .csrf(AbstractHttpConfigurer::disable)
+
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -55,5 +57,22 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(List.of("http://localhost:5137"));
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedMethods(List.of("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
