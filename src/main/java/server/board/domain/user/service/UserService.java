@@ -1,8 +1,10 @@
 package server.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.enums.Part;
 import server.board.domain.user.entity.User;
@@ -50,6 +52,14 @@ public class UserService {
     public UserResponseDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
+        return UserResponseDto.create(user);
+    }
+
+    @Transactional
+    public UserResponseDto modify(UserDetails userDetails, UserCreateRequestDto userCreateRequestDto) {
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
+        user.modify(userCreateRequestDto);
         return UserResponseDto.create(user);
     }
 }

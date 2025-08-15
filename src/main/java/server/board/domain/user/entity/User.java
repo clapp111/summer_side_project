@@ -65,4 +65,12 @@ public class User {
                 .generation(userCreateRequestDto.getGeneration())
                 .build();
     }
+
+    public void modify(UserCreateRequestDto userCreateRequestDto) {
+        this.email = userCreateRequestDto.getEmail();
+        this.password = userCreateRequestDto.getPassword();
+        this.name = userCreateRequestDto.getName();
+        this.part = Part.from(userCreateRequestDto.getPart());
+        this.generation = userCreateRequestDto.getGeneration();
+    }
 }

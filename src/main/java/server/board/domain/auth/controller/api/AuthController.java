@@ -1,4 +1,4 @@
-package server.board.domain.home.controller.api;
+package server.board.domain.auth.controller.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import server.board.domain.home.controller.docs.HomeControllerSpecification;
-import server.board.domain.home.dto.LoginRequestDto;
-import server.board.domain.home.service.HomeService;
-import server.board.domain.user.controller.docs.UserControllerSpecification;
+import server.board.domain.auth.controller.docs.AuthControllerSpecification;
+import server.board.domain.auth.dto.LoginRequestDto;
+import server.board.domain.auth.service.AuthService;
 import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.domain.user.dto.UserResponseDto;
 import server.board.global.jwt.JwtToken;
@@ -19,19 +18,19 @@ import server.board.global.jwt.JwtToken;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class HomeController implements HomeControllerSpecification {
+public class AuthController implements AuthControllerSpecification {
 
-    private final HomeService homeService;
+    private final AuthService authService;
 
     // 로그인(/api/sign-in)
     @PostMapping("/auth/sign-in")
     public ResponseEntity<JwtToken> signIn(@Valid @RequestBody LoginRequestDto loginRequestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(homeService.signIn(loginRequestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(authService.signIn(loginRequestDto));
     }
 
     // 회원가입(/api/sign-up)
     @PostMapping("/auth/sign-up")
     public ResponseEntity<UserResponseDto>  signUp(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto){
-        return ResponseEntity.status(HttpStatus.CREATED).body(homeService.signUp(userCreateRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(userCreateRequestDto));
     }
 }

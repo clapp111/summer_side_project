@@ -1,4 +1,4 @@
-package server.board.domain.home.controller.docs;
+package server.board.domain.auth.controller.docs;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,13 +12,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import server.board.domain.home.dto.LoginRequestDto;
+import server.board.domain.auth.dto.LoginRequestDto;
 import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.global.exception.error.ErrorResponse;
 import server.board.global.jwt.JwtToken;
 
-@Tag(name = "HomeController", description = "Home management Controller")
-public interface HomeControllerSpecification {
+@Tag(name = "AuthController", description = "Auth management Controller")
+public interface AuthControllerSpecification {
 
     @Operation(summary = "sign in", description = "로그인 시 사용되는 api")
     @ApiResponses({

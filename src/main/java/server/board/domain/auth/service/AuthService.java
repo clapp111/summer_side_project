@@ -1,15 +1,14 @@
-package server.board.domain.home.service;
+package server.board.domain.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import server.board.domain.home.dto.LoginRequestDto;
+import server.board.domain.auth.dto.LoginRequestDto;
 import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.entity.User;
@@ -21,7 +20,7 @@ import server.board.global.jwt.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
-public class HomeService {
+public class AuthService {
 
     private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;

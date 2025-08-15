@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.entity.UserDetailsImpl;
 import server.board.global.exception.error.ErrorResponse;
@@ -81,4 +84,22 @@ public interface UserControllerSpecification {
     })
     @GetMapping("/me")
     public ResponseEntity<UserResponseDto> getMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(summary = "modify me", description = "본인 정보 수정 시 사용되는 api")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "✅ 본인 정보 수정 성공"),
+            @ApiResponse(responseCode = "404", description = "❌ 본인 정보 수정 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유저 조회 실패",
+                                            value = "{\"error\" : \"404\", \"message\" : \"유저 조회에 실패하였습니다\"}"
+                                    )
+
+                            }, schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @PutMapping("/me")
+    public ResponseEntity<UserResponseDto> modifyMyInfo(@RequestBody UserCreateRequestDto userCreateRequestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails);
 }
