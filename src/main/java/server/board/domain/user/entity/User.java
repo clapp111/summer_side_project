@@ -11,6 +11,7 @@ import server.board.domain.recommendation.entity.Recommendation;
 import server.board.domain.user.dto.UserCreateRequestDto;
 import server.board.domain.user.enums.Part;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,12 @@ public class User {
     @Column(name = "generation")
     private Double generation;
 
+    @Column(name = "registration_date")
+    private LocalDate registrationDate;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Assignment> assignmentList =  new ArrayList<>();
 
@@ -47,13 +54,15 @@ public class User {
     private List<Recommendation> recommendationList =  new ArrayList<>();
 
     @Builder
-    private User(Long id, String email, String password, String name, Part part, Double generation) {
+    private User(Long id, String email, String password, String name, Part part, Double generation,
+                 LocalDate registrationDate,String phoneNumber) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.part = part;
         this.generation = generation;
+        this.phoneNumber = phoneNumber;
     }
 
     public static User create(UserCreateRequestDto userCreateRequestDto, String encodedPassword){
@@ -63,6 +72,8 @@ public class User {
                 .name(userCreateRequestDto.getName())
                 .part(Part.from(userCreateRequestDto.getPart()))
                 .generation(userCreateRequestDto.getGeneration())
+                .registrationDate(LocalDate.now())
+                .phoneNumber(userCreateRequestDto.getPhoneNumber())
                 .build();
     }
 
@@ -72,5 +83,6 @@ public class User {
         this.name = userCreateRequestDto.getName();
         this.part = Part.from(userCreateRequestDto.getPart());
         this.generation = userCreateRequestDto.getGeneration();
+        this.phoneNumber = userCreateRequestDto.getPhoneNumber();
     }
 }

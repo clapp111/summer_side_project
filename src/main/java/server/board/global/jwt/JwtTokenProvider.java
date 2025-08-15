@@ -2,6 +2,8 @@ package server.board.global.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -12,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import server.board.domain.user.entity.UserDetailsImpl;
+import server.board.domain.user.repository.UserRepository;
 import server.board.domain.user.service.UserDetailsServiceImpl;
 import server.board.global.exception.error.CustomErrorCode;
 import server.board.global.exception.error.RestApiException;
@@ -19,6 +22,8 @@ import server.board.global.exception.error.RestApiException;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static server.board.global.exception.error.CustomErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @Component
@@ -29,10 +34,12 @@ public class JwtTokenProvider {
 
     private final Key key;
     private final UserDetailsServiceImpl userDetailsService;
+    private final UserRepository userRepository;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey, UserDetailsServiceImpl userDetailsService, UserRepository userRepository) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
         this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
     }
 
     public JwtToken generateToken(Authentication authentication) {
@@ -58,8 +65,13 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
+        String userName = userRepository.findByEmail(authentication.getName())
+                .orElseThrow(() -> new RestApiException(USER_NOT_FOUND))
+                .getName();
+
         // TokenInfo 객체 생성 및 반환
         return JwtToken.builder()
+                .userName(userName)
                 .grantType("Bearer") // 토큰 타입 설정
                 .accessToken(accessToken) // Access Token 설정
                 .refreshToken(refreshToken) // Refresh Token 설정

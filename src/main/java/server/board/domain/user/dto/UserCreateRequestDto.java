@@ -35,4 +35,7 @@ public class UserCreateRequestDto {
     @Schema(description = "기수", example = "17.5")
     private Double generation;
 
+    @Schema(description = "휴대폰 번호", example = "010-1234-5678")
+    private String phoneNumber;
+
 }
