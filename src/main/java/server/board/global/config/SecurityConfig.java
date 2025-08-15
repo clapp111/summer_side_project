@@ -64,7 +64,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5137", "https://dongmin.inuappcenter.kr"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "https://dongmin.inuappcenter.kr"));
         configuration.setExposedHeaders(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowedMethods(List.of("*"));
