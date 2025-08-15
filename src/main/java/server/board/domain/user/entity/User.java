@@ -62,6 +62,7 @@ public class User {
         this.name = name;
         this.part = part;
         this.generation = generation;
+        this.registrationDate = registrationDate;
         this.phoneNumber = phoneNumber;
     }
 
