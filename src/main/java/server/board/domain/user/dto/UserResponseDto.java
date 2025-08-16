@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import server.board.domain.user.entity.User;
 
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Schema(description = "유저 정보 응답 DTO")
@@ -25,7 +25,7 @@ public class UserResponseDto {
     @Schema(description = "기수", example = "17.5")
     private Double generation;
 
-    @Schema(description = "가입일", example = "2025년 08월 15일")
+    @Schema(description = "가입일", example = "2025-08-15")
     private String registrationDate;
 
     @Schema(description = "휴대폰 번호", example = "010-1234-5678")
@@ -33,15 +33,13 @@ public class UserResponseDto {
 
     @Builder
     private UserResponseDto(Long id, String email, String name, String part, Double generation,
-                            LocalDate registrationDate, String phoneNumber) {
+                            String registrationDate, String phoneNumber) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.part = part;
         this.generation = generation;
-        this.registrationDate = registrationDate.getYear() + "년 "
-                + registrationDate.getMonth().getValue() + "월 "
-                + registrationDate.getDayOfMonth() + "일";
+        this.registrationDate = registrationDate;
         this.phoneNumber = phoneNumber;
     }
 
@@ -52,7 +50,8 @@ public class UserResponseDto {
                 .name(user.getName())
                 .part(user.getPart() != null ? user.getPart().getLabel() : null)
                 .generation(user.getGeneration())
-                .registrationDate(user.getRegistrationDate())
+                .registrationDate(user.getRegistrationDate()
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                 .phoneNumber(user.getPhoneNumber())
                 .build();
     }
