@@ -9,6 +9,7 @@ import server.board.domain.user.dto.UserResponseDto;
 import server.board.domain.user.enums.Part;
 import server.board.domain.user.entity.User;
 import server.board.domain.user.repository.UserRepository;
+import server.board.global.exception.error.CustomErrorCode;
 import server.board.global.exception.error.RestApiException;
 
 import java.util.ArrayList;
@@ -57,6 +58,9 @@ public class UserService {
 
     @Transactional
     public UserResponseDto modify(UserDetails userDetails, UserCreateRequestDto userCreateRequestDto) {
+        if (userRepository.existsByEmail(userCreateRequestDto.getEmail())) {
+            throw new RestApiException(CustomErrorCode.DUPLICATE_USER);
+        }
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
         user.modify(userCreateRequestDto);
