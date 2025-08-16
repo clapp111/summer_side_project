@@ -21,6 +21,9 @@ public enum Part {
     private final String label;
 
     public static Part from(String part){
+        if (part == null){
+            return null;
+        }
         return Arrays.stream(values())
                 .filter(p -> p.getLabel().equals(part))
                 .findAny()

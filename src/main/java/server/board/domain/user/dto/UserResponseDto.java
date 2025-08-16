@@ -50,7 +50,7 @@ public class UserResponseDto {
                 .id(user.getId())
                 .email(user.getEmail())
                 .name(user.getName())
-                .part(user.getPart().getLabel())
+                .part(user.getPart() != null ? user.getPart().getLabel() : null)
                 .generation(user.getGeneration())
                 .registrationDate(user.getRegistrationDate())
                 .phoneNumber(user.getPhoneNumber())
