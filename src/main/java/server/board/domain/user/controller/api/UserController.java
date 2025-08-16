@@ -1,5 +1,6 @@
 package server.board.domain.user.controller.api;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,7 @@ public class UserController implements UserControllerSpecification {
 
     // 본인 정보 수정(/api/users/me)
     @PutMapping("/me")
-    public ResponseEntity<UserResponseDto> modifyMyInfo(@RequestBody UserCreateRequestDto userCreateRequestDto,
+    public ResponseEntity<UserResponseDto> modifyMyInfo(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.modify(userDetails, userCreateRequestDto));
     }

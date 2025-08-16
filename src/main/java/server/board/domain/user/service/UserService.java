@@ -2,6 +2,7 @@ package server.board.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import server.board.domain.user.dto.UserCreateRequestDto;
@@ -22,6 +23,7 @@ import static server.board.global.exception.error.CustomErrorCode.*;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional(readOnly = true)
     public List<UserResponseDto> findAll() {
@@ -64,7 +66,18 @@ public class UserService {
         }
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
-        user.modify(userCreateRequestDto);
+
+        String encodedPassword;
+        if (userCreateRequestDto.getPassword() != null && !userCreateRequestDto.getPassword().isEmpty()) {
+            encodedPassword = bCryptPasswordEncoder.encode(userCreateRequestDto.getPassword());
+        } else {
+            encodedPassword = user.getPassword();
+        }
+
+        user.modify(
+                userCreateRequestDto,
+                encodedPassword
+        );
         return UserResponseDto.create(user);
     }
 }

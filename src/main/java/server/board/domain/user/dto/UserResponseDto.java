@@ -39,8 +39,8 @@ public class UserResponseDto {
         this.name = name;
         this.part = part;
         this.generation = generation;
-        this.registrationDate = registrationDate.getYear() + "년"
-                + registrationDate.getMonth() + "월"
+        this.registrationDate = registrationDate.getYear() + "년 "
+                + registrationDate.getMonth().getValue() + "월 "
                 + registrationDate.getDayOfMonth() + "일";
         this.phoneNumber = phoneNumber;
     }

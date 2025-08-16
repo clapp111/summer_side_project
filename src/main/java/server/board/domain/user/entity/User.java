@@ -78,9 +78,9 @@ public class User {
                 .build();
     }
 
-    public void modify(UserCreateRequestDto userCreateRequestDto) {
+    public void modify(UserCreateRequestDto userCreateRequestDto, String encodedPassword) {
         this.email = userCreateRequestDto.getEmail();
-        this.password = userCreateRequestDto.getPassword();
+        this.password = encodedPassword;
         this.name = userCreateRequestDto.getName();
         this.part = Part.from(userCreateRequestDto.getPart());
         this.generation = userCreateRequestDto.getGeneration();
