@@ -58,7 +58,8 @@ public class UserService {
 
     @Transactional
     public UserResponseDto modify(UserDetails userDetails, UserCreateRequestDto userCreateRequestDto) {
-        if (userRepository.existsByEmail(userCreateRequestDto.getEmail())) {
+        if (userRepository.existsByEmail(userCreateRequestDto.getEmail())
+                && !userCreateRequestDto.getEmail().equals(userDetails.getUsername())) {
             throw new RestApiException(CustomErrorCode.DUPLICATE_USER);
         }
         User user = userRepository.findByEmail(userDetails.getUsername())
