@@ -3,6 +3,7 @@ package server.board.domain.assignment.controller.api;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,16 @@ public class AssignmentController implements AssignmentControllerSpecification {
             @AuthenticationPrincipal UserDetailsImpl  userDetails,
             @RequestParam(value = "sort", defaultValue = "createdAt") String options) {
         return ResponseEntity.status(HttpStatus.OK).body(assignmentService.findAllOrderByOption(pageable, options, userDetails));
+    }
+
+    // 유저별 과제 조회(/api/assignments/user/{userId}?sort={options})
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AssignmentResponseDto>> getUserAssignmentsInfo(
+            @PathVariable Long userId,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "sort", defaultValue = "createdAt") String options,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(assignmentService.findAssignmentsByUserId(userId, pageable, options, userDetails));
     }
 
     // 과제 제출(/api/assignments)

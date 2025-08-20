@@ -11,7 +11,9 @@ import server.board.domain.assignment.dto.AssignmentResponseDto;
 import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.assignment.repository.AssignmentRepository;
 import server.board.domain.recommendation.repository.RecommendationRepository;
+import server.board.domain.user.entity.User;
 import server.board.domain.user.entity.UserDetailsImpl;
+import server.board.domain.user.repository.UserRepository;
 import server.board.global.exception.error.RestApiException;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class AssignmentService {
 
     private final AssignmentRepository assignmentRepository;
     private final RecommendationRepository recommendationRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public List<AssignmentResponseDto> findAllOrderByOption(Pageable pageable, String options, UserDetailsImpl userDetails) {
@@ -42,6 +45,33 @@ public class AssignmentService {
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
         for (Assignment assignment : assignmentPage.getContent()){
             assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment, checkRecommended(userDetails, assignment)));
+        }
+        return assignmentResponseDtoList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AssignmentResponseDto> findAssignmentsByUserId(Long userId, Pageable pageable,
+                                                               String options, UserDetailsImpl userDetails) {
+        // 조회하려는 userId의 유저가 존재하는지 확인
+        userRepository.findById(userId)
+                .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
+        Page<Assignment> assignmentPage;
+
+        // 추천순 정렬
+        if ("recommendation".equals(options)) {
+            Pageable newPageable = PageRequest.of(pageable.getPageNumber(),pageable.getPageSize());
+            assignmentPage = assignmentRepository.findUserAssignmentsOrderByRecommendation(userId, newPageable);
+        }
+        // 그 외 정렬 (Pageable의 sort 정보 사용)
+        else {
+            assignmentPage = assignmentRepository.findByUserId(userId, pageable);
+        }
+
+        List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
+        for (Assignment assignment : assignmentPage.getContent()){
+            // 추천 여부 확인은 "로그인한 사용자" 기준으로 해야 함
+            assignmentResponseDtoList.add(AssignmentResponseDto.create(assignment,
+            checkRecommended(userDetails, assignment)));
         }
         return assignmentResponseDtoList;
     }
@@ -78,6 +108,10 @@ public class AssignmentService {
 
     // 사용자가 해당 과제에 추천을 했는지 여부를 확인하는 메서드
     private Boolean checkRecommended(UserDetailsImpl userDetails, Assignment assignment){
+        // 비로그인 사용자를 위해 null 체크 추가
+        if (userDetails == null) {
+            return Boolean.FALSE;
+        }
         Boolean isRecommended = Boolean.FALSE;
         if (recommendationRepository.findByUserIdAndAssignmentId(userDetails.getUser().getId(), assignment.getId()).isPresent()){
             isRecommended = Boolean.TRUE;

@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ import java.util.List;
 
 @Tag(name = "AssignmentController", description = "Assignment management Controller")
 public interface AssignmentControllerSpecification {
-    @Operation(summary = "search all assignments", description = "과제 조회 시 사용되는 api")
+    @Operation(summary = "search all assignments", description = "전체 과제 조회 시 사용되는 api")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "✅ 전체 과제 조회 성공"),
             @ApiResponse(responseCode = "404", description = "❌ 전체 과제 조회 실패",
@@ -46,6 +47,31 @@ public interface AssignmentControllerSpecification {
             @PageableDefault Pageable pageable,
             @AuthenticationPrincipal UserDetailsImpl userDetails,
             @RequestParam(value = "sort", defaultValue = "createdAt") String options);
+
+    @Operation(summary = "search user assignments", description = "유저별 과제 조회 시 사용되는 api")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "✅ 유저별 과제 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "❌ 유저별 과제 조회 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유저 조회 실패",
+                                            value = "{\"error\" : \"404\", \"message\" : \"유저 조회에 실패하였습니다\"}"
+                                    ),
+                                    @ExampleObject(
+                                            name = "과제 조회 실패",
+                                            value = "{\"error\" : \"404\", \"message\" : \"과제 조회에 실패하였습니다\"}"
+                                    )
+
+                            }, schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<AssignmentResponseDto>> getUserAssignmentsInfo(
+            @PathVariable Long userId,
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam(value = "sort", defaultValue = "createdAt") String options,
+            @AuthenticationPrincipal UserDetailsImpl userDetails);
 
 
     @Operation(summary = "submit assignment", description = "과제 제출 시 사용되는 api")
