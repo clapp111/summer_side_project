@@ -2,6 +2,7 @@ package server.board.domain.user.controller.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -44,6 +45,13 @@ public class UserController implements UserControllerSpecification {
     public ResponseEntity<UserResponseDto> modifyMyInfo(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.modify(userDetails, userCreateRequestDto));
+    }
+
+    // 본인 삭제(/api/users/me)
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        userService.delete(userDetails);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

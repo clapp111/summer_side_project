@@ -102,4 +102,21 @@ public interface UserControllerSpecification {
     @PutMapping("/me")
     public ResponseEntity<UserResponseDto> modifyMyInfo(@RequestBody UserCreateRequestDto userCreateRequestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails);
+
+    @Operation(summary = "delete me", description = "본인 정보 삭제 시 사용되는 api")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "✅ 본인 정보 삭제 성공"),
+            @ApiResponse(responseCode = "404", description = "❌ 본인 정보 삭제 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유저 조회 실패",
+                                            value = "{\"error\" : \"404\", \"message\" : \"유저 조회에 실패하였습니다\"}"
+                                    )
+
+                            }, schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @PutMapping("/me")
+    public ResponseEntity<Void> deleteMyInfo(@AuthenticationPrincipal UserDetailsImpl userDetails);
 }

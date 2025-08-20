@@ -80,4 +80,12 @@ public class UserService {
         );
         return UserResponseDto.create(user);
     }
+
+    @Transactional
+    public void delete(UserDetails userDetails) {
+        if(!userRepository.existsByEmail(userDetails.getUsername())){
+            throw new RestApiException(USER_NOT_FOUND);
+        }
+        userRepository.deleteByEmail(userDetails.getUsername());
+    }
 }
