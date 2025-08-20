@@ -35,7 +35,7 @@ public class AssignmentController implements AssignmentControllerSpecification {
         return ResponseEntity.status(HttpStatus.OK).body(assignmentService.findAllOrderByOption(pageable, options, userDetails));
     }
 
-    // 유저별 과제 조회(/api/assignments/user/{userId}?sort={options})
+    // 유저별 과제 조회(/api/assignments/user/{userId}?sort={options}) // createdAt, recommnedation
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AssignmentResponseDto>> getUserAssignmentsInfo(
             @PathVariable Long userId,

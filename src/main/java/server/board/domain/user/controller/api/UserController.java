@@ -28,10 +28,17 @@ public class UserController implements UserControllerSpecification {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
 
-    // 파트 유저 조회(/api/users/{parts})
-    @GetMapping("/{parts}")
-    public ResponseEntity<List<UserResponseDto>> getPartUsersInfo(@PathVariable String parts) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.findByPart(parts));
+    // 파트 유저 조회(/api/users/by-part/{part})
+    @GetMapping("/by-part/{part}")
+    public ResponseEntity<List<UserResponseDto>> getPartUsersInfo(@PathVariable String part) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findByPart(part));
+    }
+
+    // 특정 유저 조회(/api/users/by-id/{userId})
+    @GetMapping("/by-id/{userId}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable Long userId,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findById(userId));
     }
 
     // 마이페이지 조회(/api/users/me)

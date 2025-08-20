@@ -64,8 +64,26 @@ public interface UserControllerSpecification {
                             }, schema = @Schema(implementation = ErrorResponse.class)))
 
     })
-    @GetMapping("/{parts}")
-    public ResponseEntity<List<UserResponseDto>> getPartUsersInfo(@PathVariable String parts);
+    @GetMapping("/by-part/{part}")
+    public ResponseEntity<List<UserResponseDto>> getPartUsersInfo(@PathVariable String part);
+
+    @Operation(summary = "search user by id", description = "특정 유저 조회 시 사용되는 api")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "✅ 특정 유저 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "❌ 특정 유저 조회 실패",
+                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            examples = {
+                                    @ExampleObject(
+                                            name = "유저 조회 실패",
+                                            value = "{\"error\" : \"404\", \"message\" : \"유저 조회에 실패하였습니다\"}"
+                                    )
+
+                            }, schema = @Schema(implementation = ErrorResponse.class)))
+
+    })
+    @GetMapping("/by-id/{userId}")
+    public ResponseEntity<UserResponseDto> getUserInfo(@PathVariable Long userId,
+                                                       @AuthenticationPrincipal UserDetailsImpl userDetails);
 
 
     @Operation(summary = "search me", description = "본인 조회 시 사용되는 api")

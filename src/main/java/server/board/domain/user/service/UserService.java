@@ -52,6 +52,13 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserResponseDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
+        return UserResponseDto.create(user);
+    }
+
+    @Transactional(readOnly = true)
     public UserResponseDto findByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
