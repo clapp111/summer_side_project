@@ -52,8 +52,7 @@ public class AssignmentService {
     @Transactional(readOnly = true)
     public List<AssignmentResponseDto> findAssignmentsByUserId(Long userId, Pageable pageable,
                                                                String options, UserDetailsImpl userDetails) {
-        // 조회하려는 userId의 유저가 존재하는지 확인
-        userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RestApiException(USER_NOT_FOUND));
         Page<Assignment> assignmentPage;
 
@@ -64,7 +63,7 @@ public class AssignmentService {
         }
         // 그 외 정렬 (Pageable의 sort 정보 사용)
         else {
-            assignmentPage = assignmentRepository.findByUserId(userId, pageable);
+            assignmentPage = assignmentRepository.findByUser(user, pageable);
         }
 
         List<AssignmentResponseDto> assignmentResponseDtoList = new ArrayList<>();
@@ -85,7 +84,7 @@ public class AssignmentService {
 
     @Transactional
     public AssignmentResponseDto modify(Long assignmentId, AssignmentCreateRequestDto assignmentCreateRequestDto, UserDetailsImpl userDetails) {
-        Assignment assignment = assignmentRepository.findById(assignmentId)
+        Assignment assignment = assignmentRepository.findByIdWithUserAndRecommendations(assignmentId)
                 .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
 
         if(!assignment.getUser().getId().equals(userDetails.getUser().getId())) {
@@ -98,7 +97,7 @@ public class AssignmentService {
 
     @Transactional
     public void delete(Long assignmentId, UserDetailsImpl userDetails) {
-        Assignment assignment = assignmentRepository.findById(assignmentId)
+        Assignment assignment = assignmentRepository.findByIdWithUserAndRecommendations(assignmentId)
                 .orElseThrow(() -> new RestApiException(ASSIGNMENT_NOT_FOUND));
         if(!assignment.getUser().getId().equals(userDetails.getUser().getId())) {
             throw new RestApiException(ASSIGNMENT_DELETE_FORBIDDEN);

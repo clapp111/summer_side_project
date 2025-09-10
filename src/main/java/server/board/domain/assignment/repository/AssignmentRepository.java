@@ -8,7 +8,12 @@ import org.springframework.data.repository.query.Param;
 import server.board.domain.assignment.entity.Assignment;
 import server.board.domain.user.entity.User;
 
+import java.util.Optional;
+
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
+
+    @Query("select a from Assignment a join fetch a.user left join fetch a.recommendationList where a.id = :id")
+    Optional<Assignment> findByIdWithUserAndRecommendations(@Param("id") Long id);
 
     @Query("SELECT a FROM Assignment a ORDER BY a.createdAt DESC")
     Page<Assignment> findAllOrderByCreatedAt(Pageable pageable);
@@ -21,5 +26,5 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
             "ORDER BY COUNT(r) DESC, a.createdAt DESC")
     Page<Assignment> findUserAssignmentsOrderByRecommendation(@Param("userId") Long userId, Pageable pageable);
 
-    Page<Assignment> findByUserId(Long userId, Pageable pageable);
+    Page<Assignment> findByUser(User user, Pageable pageable);
 }
